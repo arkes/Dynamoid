@@ -237,9 +237,9 @@ describe Dynamoid::Persistence do
       time = Time.now
       user = User.create(last_logged_in_at: time)
       user = User.find(user.id)
-      expect(user.last_logged_in_at).to be_a(DateTime)
+      expect(user.last_logged_in_at).to be_a(Time)
       # we can't compare objects directly because lose precision of milliseconds in conversions
-      expect(user.last_logged_in_at.to_s).to eq time.to_datetime.to_s
+      expect(user.last_logged_in_at.to_s).to eq time.to_time.to_s
     end
 
     it 'loads time in specified time zone if config.application_timezone == time zone name', application_timezone: 'Hawaii' do

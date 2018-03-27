@@ -44,8 +44,8 @@ describe Dynamoid::Fields do
     address.save
 
     address.reload
-    expect(address.created_at).to be_a DateTime
-    expect(address.updated_at).to be_a DateTime
+    expect(address.created_at).to be_a Time
+    expect(address.updated_at).to be_a Time
   end
 
   context 'query attributes' do

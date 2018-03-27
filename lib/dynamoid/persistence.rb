@@ -202,8 +202,10 @@ module Dynamoid
           type.respond_to?(:dynamoid_field_type) ? type.dynamoid_field_type : :string
         else
           case type
-            when :integer, :number, :datetime, :date
+            when :integer, :number
               :number
+            when :datetime, :date
+              Dynamoid.config.store_datetime_as_string ? :string : :number
             when :string, :serialized
               :string
             else
@@ -276,15 +278,15 @@ module Dynamoid
         use_string_format = options[:store_as_string].nil? \
           ? Dynamoid.config.store_datetime_as_string \
           : options[:store_as_string]
-        value = DateTime.iso8601(value).to_time.to_i if use_string_format
+        value = Time.iso8601(value).to_time.to_i if use_string_format
 
         case Dynamoid::Config.application_timezone
           when :utc
-            ActiveSupport::TimeZone['UTC'].at(value).to_datetime
+            ActiveSupport::TimeZone['UTC'].at(value).to_time
           when :local
-            Time.at(value).to_datetime
+            Time.at(value).to_time
           when String
-            ActiveSupport::TimeZone[Dynamoid::Config.application_timezone].at(value).to_datetime
+            ActiveSupport::TimeZone[Dynamoid::Config.application_timezone].at(value).to_time
         end
       end
 
@@ -315,10 +317,10 @@ module Dynamoid
       end
     end
 
-    # Set updated_at and any passed in field to current DateTime. Useful for things like last_login_at, etc.
+    # Set updated_at and any passed in field to current Time. Useful for things like last_login_at, etc.
     #
     def touch(name = nil)
-      now = DateTime.now
+      now = Time.now
       self.updated_at = now
       attributes[name] = now if name
       save

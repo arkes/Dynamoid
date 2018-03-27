@@ -33,7 +33,7 @@ module Dynamoid #:nodoc:
       #   where(:name => 'Josh')
       #
       # @example A more complicated criteria
-      #   where(:name => 'Josh', 'created_at.gt' => DateTime.now - 1.day)
+      #   where(:name => 'Josh', 'created_at.gt' => Time.now - 1.day)
       #
       # @since 0.2.0
       def where(args)
